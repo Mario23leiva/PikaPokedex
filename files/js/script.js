@@ -59,7 +59,7 @@ const renderPokemon = async (pokemon) => {
         pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default'];
         let pokeSripte = pokemonImages.src;
         console.log(pokeSripte);
-        if (pokemonImage.src === 'https://mario23leiva.github.io/PikaPokedex/null') {
+        if (pokemonImage.src === 'http://127.0.0.1:5500/null' || pokemonImage.src === 'https://mario23leiva.github.io/PikaPokedex/null') {
             pokemonImage.src = data['sprites']['versions']['generation-viii']['icons']['front_default'];
         }
           
