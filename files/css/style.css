@@ -15,6 +15,9 @@ body {
     min-height: 100vh;
 }
 
+
+  
+
 main{
     display: inline-block;
     margin-top: 2%;
@@ -74,14 +77,14 @@ li img{
 .form{
     position: absolute;
     width: 37%;
-    top: 64.5%;
+    top: 63%;
     left: 6%;
 }
 
 .input__search{
     background-color: #e3e3e3;
     width: 97%;
-    padding: 4%;
+    padding: 2%;
     outline: none;
     border: 2% solid #333;
     border-radius: 5px;
@@ -115,4 +118,86 @@ li img{
 
 .button:active{
     box-shadow: inset -0.2vw 0.2vw 0 #222; 
+}
+
+.botones{
+    position: absolute;
+    top: 75%;
+    left: 28%;
+    width: 12%;
+    height: 15%;
+}
+
+.botones .btn__a{
+    position: absolute;
+    left: 50%;
+    width: 44%;
+    height: 44%;
+    background-color: #84e837;
+    border-radius: 17px;
+    box-shadow: -0.2vw 0.2vw 0 #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.botones .btn__b{
+    position: absolute;
+    top: 50%;
+    width: 44%;
+    height: 44%;
+    background-color: #3d9aec;
+    border-radius: 17px;
+    box-shadow: -0.2vw 0.2vw 0 #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.joystick{
+    position: absolute;
+    top: 75%;
+    left: 8%;
+    width: 12%;
+    height: 15%;
+    background-color: aquamarine;
+}
+
+.joystick .btn__up{
+    position: absolute;
+    left: 38%;
+    width: 24%;
+    height: 50%;
+    background-color: #3a444d;
+    border-radius: 7px;
+}
+
+.joystick .btn__down{
+    position: absolute;
+    top: 50%;
+    left: 38%;
+    width: 24%;
+    height: 50%;
+    background-color: #3a444d;
+    border-radius: 7px;
+}
+
+.joystick .btn__left{
+    position: absolute;
+    top: 40%;
+    width: 50%;
+    height: 25%;
+    background-color: #3a444d;
+    border-radius: 7px;
+}
+
+.joystick .btn__right{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 50%;
+    height: 25%;
+    background-color: #3a444d;
+    border-radius: 7px;
 }

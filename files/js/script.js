@@ -12,6 +12,9 @@ const buttonNext = document.querySelector('.btn-next');
 var pokemonSelected = '';
 
 
+
+  
+
 const fetchLista = async () => {
     const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=898&offset=0`);
     if(APIResponse.status == 200){
@@ -57,7 +60,7 @@ const renderPokemon = async (pokemon) => {
         pokemonNumber.innerHTML = data.id;
     
         pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default'];
-        let pokeSripte = pokemonImages.src;
+        let pokeSripte = pokemonImage.src;
         console.log(pokeSripte);
         if (pokemonImage.src === 'http://127.0.0.1:5500/null' || pokemonImage.src === 'https://mario23leiva.github.io/PikaPokedex/null') {
             pokemonImage.src = data['sprites']['versions']['generation-viii']['icons']['front_default'];
