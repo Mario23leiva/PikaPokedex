@@ -1,6 +1,7 @@
 const pokemonName = document.querySelector('.pokemon__name');
 const pokemonNumber = document.querySelector('.pokemon__number');
 const pokemonImage = document.querySelector('.pokemon__image');
+const pokeAPIList = document.querySelector('.pokeAPI__list');
 
 const form = document.querySelector('.form');
 const input = document.querySelector('.input__search');
@@ -9,6 +10,30 @@ const buttonPrev = document.querySelector('.btn-prev');
 const buttonNext = document.querySelector('.btn-next');
 
 var pokemonSelected = '';
+
+
+const fetchLista = async () => {
+    const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=898&offset=0`);
+    if(APIResponse.status == 200){
+        const list = await APIResponse.json();
+        renderList(list);
+    }
+}
+
+const renderList = async (list) => {
+
+    list.results.forEach(async pokemon => {
+        const poke = await fetchPokemon(pokemon.name);
+        const pokemonSprite = poke['sprites']['versions']['generation-viii']['icons']['front_default'];
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+          <img src="${pokemonSprite}"/>
+          <span>${pokemon.name}</span>
+        `;
+        pokeAPIList.appendChild(listItem);
+    });
+}
+
 
 const fetchPokemon = async (pokemon) => {
     const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
@@ -30,7 +55,12 @@ const renderPokemon = async (pokemon) => {
     if(data){
         pokemonName.innerHTML = data.name;
         pokemonNumber.innerHTML = data.id;
+    
         pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default'];
+        if (pokemonImage.src === 'http://127.0.0.1:5500/null') {
+            pokemonImage.src = data['sprites']['versions']['generation-viii']['icons']['front_default'];
+        }
+          
         input.value = '';
         pokemonSelected = data.id;
     }
@@ -59,3 +89,4 @@ buttonPrev.addEventListener('click' , () =>{
 })
 
 renderPokemon('1');
+fetchLista();

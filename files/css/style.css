@@ -22,6 +22,27 @@ main{
     position: relative;
 }
 
+.vertical__menu{
+    width: fit-content;
+    height: 150px;
+    overflow-y: auto;
+}
+
+
+.pokeAPI__list{
+    text-align: left;
+}
+
+li{
+    list-style: none;
+    font-weight: 500;
+    font-size: clamp(8px, 2vw, 1rem);
+}
+
+li img{
+    width: 100px;
+}
+
 .pokedex{
     width: 100%;
     max-width: 825px;
