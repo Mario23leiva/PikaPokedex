@@ -27,7 +27,8 @@ main{
     width: fit-content;
     height: 150px;
     overflow-y: auto;
-    top: 10%;
+    top: 33%;
+    left: 60%;
 }
 
 
