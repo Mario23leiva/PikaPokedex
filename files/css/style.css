@@ -15,9 +15,6 @@ body {
     min-height: 100vh;
 }
 
-
-  
-
 main{
     display: inline-block;
     margin-top: 2%;
@@ -44,6 +41,10 @@ li{
 
 li img{
     width: 100px;
+}
+
+li.active{
+    background-color: #3d9aec;
 }
 
 .pokedex{
@@ -133,6 +134,7 @@ li img{
     left: 50%;
     width: 44%;
     height: 44%;
+    font-weight: 600;
     background-color: #84e837;
     border-radius: 17px;
     box-shadow: -0.2vw 0.2vw 0 #222;
@@ -147,6 +149,7 @@ li img{
     top: 50%;
     width: 44%;
     height: 44%;
+    font-weight: 600;
     background-color: #3d9aec;
     border-radius: 17px;
     box-shadow: -0.2vw 0.2vw 0 #222;
@@ -161,7 +164,6 @@ li img{
     left: 8%;
     width: 12%;
     height: 15%;
-    background-color: aquamarine;
 }
 
 .joystick .btn__up{

@@ -6,11 +6,12 @@ const pokeAPIList = document.querySelector('.pokeAPI__list');
 const form = document.querySelector('.form');
 const input = document.querySelector('.input__search');
 
-const buttonPrev = document.querySelector('.btn-prev');
-const buttonNext = document.querySelector('.btn-next');
+const buttonPrev = document.querySelector('.btn__left');
+const buttonNext = document.querySelector('.btn__right');
 
 var pokemonSelected = '';
-
+var index = 1;
+var indexSelected = 1;
 
 
   
@@ -24,17 +25,29 @@ const fetchLista = async () => {
 }
 
 const renderList = async (list) => {
-
     list.results.forEach(async pokemon => {
         const poke = await fetchPokemon(pokemon.name);
         const pokemonSprite = poke['sprites']['versions']['generation-viii']['icons']['front_default'];
         const listItem = document.createElement('li');
+        if(index == indexSelected){
+            listItem.className = 'active';
+        } else {
+            listItem.className = '#' + index;
+        }
+        listItem.id = index;
         listItem.innerHTML = `
           <img src="${pokemonSprite}"/>
           <span>${pokemon.name}</span>
         `;
         pokeAPIList.appendChild(listItem);
+        index++;
     });
+
+    const element001 = document.getElementById("1");
+    if (element001) {
+        element001.className = "active";
+    }
+
 }
 
 
