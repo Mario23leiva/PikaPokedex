@@ -9,9 +9,9 @@
 
 body {
     text-align: center;
-    /*background-image: url(../img_pika_pokedex/imagen_fondo.jpg);
+    background-image: url(../img_pika_pokedex/imagen_fondo.jpg);
     background-repeat: no-repeat;
-    background-size: cover;*/
+    background-size: cover;
     min-height: 100vh;
 }
 
@@ -23,9 +23,11 @@ main{
 }
 
 .vertical__menu{
+    position: absolute;
     width: fit-content;
     height: 150px;
     overflow-y: auto;
+    top: 10%;
 }
 
 

@@ -16,6 +16,7 @@ const buttonB = document.querySelector('.btn__b');
 var pokemonSelected = '';
 var index = 1;
 var indexSelected = 1;
+var newIndexSelected = 1;
 
 
   
@@ -126,6 +127,8 @@ buttonUp.addEventListener('click' , () =>{
     } else {
         //poner ultimo pokemon seleccionado
     }
+
+    changePokemonSelected("restar");
 })
 
 buttonDown.addEventListener('click' , () =>{
@@ -139,6 +142,9 @@ buttonDown.addEventListener('click' , () =>{
     } else {
         //poner primer pokemon seleccionado
     }
+
+    changePokemonSelected("sumar");
+
 })
 
 buttonA.addEventListener('click' , () =>{
@@ -149,6 +155,10 @@ buttonA.addEventListener('click' , () =>{
         renderPokemon(elementSelected.id);
     }
 })
+
+const changePokemonSelected = (action) =>{
+
+}
 
 renderPokemon('1');
 fetchLista();
