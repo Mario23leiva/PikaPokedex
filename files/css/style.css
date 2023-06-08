@@ -24,16 +24,20 @@ main{
 
 .vertical__menu{
     position: absolute;
-    width: 31%;
-    height: 23%;
+    width: 30.35%;
+    height: 25%;
     overflow-y: auto;
-    top: 33%;
-    left: 60%;
+    top: 27.7%;
+    left: 9.5%;
+    padding: 2%;
+    border-radius: 5%;
+    background-color: #444444;
 }
 
 
 .pokeAPI__list{
     text-align: left;
+    color: #e3e3e3;
 }
 
 li{
@@ -48,6 +52,9 @@ li img{
 
 li.active{
     background-color: #3d9aec;
+    color: #000;
+    font-weight: 700;
+    padding-left: 2%;
 }
 
 .pokedex{

@@ -14,75 +14,81 @@ const buttonA = document.querySelector('.btn__a');
 const buttonB = document.querySelector('.btn__b');
 
 var pokemonSelected = '';
-var index = 1;
 var indexSelected = 1;
 var newIndexSelected = 1;
+var list = [];
 
-var actualScreen = "PokemonList"; // MovesList, BerriesList, NaturesList, HabilitiesList
-
+var actualList = "MainList"; //PokemonList MovesList, BerriesList, NaturesList, AbilitiesList
+var actualScreen = ""; //PokemonDetail MovesDetail, BerriesDetail, NaturesDetail, AbilitiesDetail
+const mainList = ["Pokemon", "Move", "Ability", "Nature", "Berry"];
+const oakMessage = "Oak's words echoed... There's a time and place for everything, but not now.";
 
   
 
 const fetchLista = async (type) => {
-    if (type == "PokemonList"){
-        const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=898&offset=0`);
+    if(type == "MainList"){
+        renderList("main");
+    } else {
+        const APIResponse = await fetch(`https://pokeapi.co/api/v2/${getListType()}?limit=898&offset=0`);
         if(APIResponse.status == 200){
-            const list = await APIResponse.json();
-            renderList(list);
+            list = await APIResponse.json();
+            renderList(getListType(), list);
             console.log(list);
         }
-    } else if(type == "MovesList"){
-        const APIResponse = await fetch(`https://pokeapi.co/api/v2/move`);
-        if(APIResponse.status == 200){
-            const list = await APIResponse.json();
-            renderList(list);
-            console.log(list);
-        }
-    } else if(type == "BerriesList"){
-
-    } else if(type == "NaturesList"){
-
-    } else if(type == "HabilitiesList"){
-
-    } else if(type == "MainList"){
-        
     }
 
 }
 
-const renderList = async (list) => {
-    for (let i = 0; i < list.results.length; i++) {
-        const pokemon = list.results[i];
-        const poke = await fetchPokemon(pokemon.name);
-        var pokeOrder = poke.id.toString().length;
-        if(pokeOrder == 1){
-            pokeOrder = '00' + poke.id;
-        } else if(pokeOrder == 2){
-            pokeOrder = '0' + poke.id;
-        } else{
-            pokeOrder = poke.id;
-        }
-        const listItem = document.createElement('li');
-    
-        if (index === indexSelected) {
-            listItem.className = 'active';
-        } else {
-            listItem.className = '#' + index;
-        }
+const renderList = async (type, list) => {
+    var index = 1;
+    pokeAPIList.innerHTML = '';
+    if(type != "main"){
+        for (let i = 0; i < list.results.length; i++) {
+            const element = list.results[i];
+            const obj = await fetchElement(type, element.name);
+            var pokeOrder = obj.id.toString().length;
+            if(pokeOrder == 1){
+                pokeOrder = '00' + obj.id;
+            } else if(pokeOrder == 2){
+                pokeOrder = '0' + obj.id;
+            } else{
+                pokeOrder = obj.id;
+            }
+            const listItem = document.createElement('li');
         
-        listItem.id = index;
-        listItem.innerHTML = `
-            <span>${pokeOrder}</span> - 
-            <span>${pokemon.name}</span>
-            `;
-        
+            if (index === indexSelected) {
+                listItem.className = 'active';
+            } else {
+                listItem.className = '#' + index;
+            }
+            
+            listItem.id = index;
+            listItem.innerHTML = `
+                <span>${pokeOrder}</span> - 
+                <span>${element.name}</span>
+                `;
+            
+                pokeAPIList.appendChild(listItem);
+                index++;
+        }
+      
+        const element001 = document.getElementById("1");
+        if (element001) {
+            element001.className = "active";
+        }
+    } else{
+        for(let i = 0; i < mainList.length; i++) {
+            const listItem = document.createElement('li');
+            if ((i+1) === indexSelected) {
+                listItem.className = 'active';
+            } else {
+                listItem.className = '#' + index;
+            }
+            listItem.id = index;
+            listItem.innerHTML = `- <span>${mainList[i]}</span>`;
             pokeAPIList.appendChild(listItem);
             index++;
-    }
-  
-    const element001 = document.getElementById("1");
-    if (element001) {
-        element001.className = "active";
+        }
     }
 };
   
@@ -90,8 +96,8 @@ const renderList = async (list) => {
 
 //poner aqui el elemento para que busque los elementos que pide(bayas, objetos...)
 //hacer condicionales
-const fetchPokemon = async (pokemon) => {
-    const APIResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
+const fetchElement = async (type ,element) => {
+    const APIResponse = await fetch(`https://pokeapi.co/api/v2/${type}/${element}`);
     if(APIResponse.status == 200){
         const data = await APIResponse.json();
         return data;
@@ -100,11 +106,11 @@ const fetchPokemon = async (pokemon) => {
     
 }
 
-const renderPokemon = async (pokemon) => {
+const renderPokemon = async (type, id) => {
 
     pokemonName.innerHTML = 'Loading...';
     
-    data = await fetchPokemon(pokemon);
+    data = await fetchElement(type, id);
     
     if(data){
         pokemonName.innerHTML = data.name;
@@ -158,47 +164,73 @@ buttonDown.addEventListener('click' , () =>{
 buttonA.addEventListener('click' , () =>{
     const elementSelected = document.querySelector(".active");
     let idSelected = null;
-    if (elementSelected && elementSelected.id) {
-        idSelected = elementSelected.id;
-        changeScreen("PokemonDetail");
-        renderPokemon(elementSelected.id);
+    if(actualList == "MainList"){
+        const spanSelected = elementSelected.querySelector("span");
+        const textoSeleccionado = spanSelected.textContent;
+        actualList = textoSeleccionado + "List";
+        console.log(actualList);
+        fetchLista(actualList);
+    } else {
+        if (elementSelected && elementSelected.id) {
+            idSelected = elementSelected.id;
+            console.log(elementSelected.id);
+            changeScreen("PokemonDetail");
+            renderPokemon("pokemon", elementSelected.id);
+        }
     }
+    
 })
 
 const changeElementSelected = (action) =>{
-    if(actualScreen == "PokemonList"){
-        changePokemonSelected(action);
-    } else if(actualScreen == "MovesList"){
-        
-    } else if(actualScreen == "HabilitiesList"){
-        
-    } else if(actualScreen == "NaturesList"){
-        
-    } else if(actualScreen == "BerriesList"){
-        
-    } else if(actualScreen == "MainList"){
-        //lista principal con los 5 menus(pokemon, bayas, habilidades...)
+    if(actualScreen == "MainList"){
+        changeElementsListSelected(action, actualScreen);
+    } else{
+        changeElementsListSelected(action);
     }
 }
 
-const changePokemonSelected = (action) =>{
-    if (action == "sumar"){
-        if(indexSelected != 898){
-            const elementSelected = document.querySelector(".active");
-            elementSelected.classList.replace("active", "#" + indexSelected);
-            indexSelected++;
-            const newElementSelected = document.getElementById(indexSelected);
-            newElementSelected.classList.replace("#" + indexSelected, "active");
-            newElementSelected.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+
+const changeElementsListSelected = (action, actualScreen) =>{
+    if(actualList == "MainList"){
+        if (action == "sumar"){
+            if(indexSelected < mainList.length){
+                const elementSelected = document.querySelector(".active");
+                elementSelected.classList.replace("active", "#" + indexSelected);
+                indexSelected++;
+                const newElementSelected = document.getElementById(indexSelected);
+                newElementSelected.classList.replace("#" + indexSelected, "active");
+                newElementSelected.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        } else if (action == "restar"){
+            if(indexSelected != 1){
+                const elementSelected = document.querySelector(".active");
+                elementSelected.classList.replace("active", "#" + indexSelected);
+                indexSelected--;
+                const newElementSelected = document.getElementById(indexSelected);
+                newElementSelected.classList.replace("#" + indexSelected, "active");
+                newElementSelected.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         }
-    } else if (action == "restar"){
-        if(indexSelected != 1){
-            const elementSelected = document.querySelector(".active");
-            elementSelected.classList.replace("active", "#" + indexSelected);
-            indexSelected--;
-            const newElementSelected = document.getElementById(indexSelected);
-            newElementSelected.classList.replace("#" + indexSelected, "active");
-            newElementSelected.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+        if (action == "sumar"){
+            if(indexSelected != list.length){
+                const elementSelected = document.querySelector(".active");
+                elementSelected.classList.replace("active", "#" + indexSelected);
+                indexSelected++;
+                const newElementSelected = document.getElementById(indexSelected);
+                newElementSelected.classList.replace("#" + indexSelected, "active");
+                newElementSelected.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        } else if (action == "restar"){
+            if(indexSelected != 1){
+                const elementSelected = document.querySelector(".active");
+                elementSelected.classList.replace("active", "#" + indexSelected);
+                indexSelected--;
+                const newElementSelected = document.getElementById(indexSelected);
+                newElementSelected.classList.replace("#" + indexSelected, "active");
+                newElementSelected.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         }
     }
 }
@@ -206,10 +238,13 @@ const changePokemonSelected = (action) =>{
 
 
 const changeScreen = (screen) =>{
-    if (screen == "PokemonDetail"){
-
-    }
+    actualScreen = screen;
 }
 
-renderPokemon('1');
-fetchLista();
+const getListType = () =>{
+    const subcadenas = actualList.split("List");
+    const typeList = subcadenas[0];
+    return typeList.toLowerCase();
+}
+
+fetchLista(actualList);
