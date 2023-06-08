@@ -18,8 +18,8 @@ var indexSelected = 1;
 var newIndexSelected = 1;
 var list = [];
 
-var actualList = "MainList"; //PokemonList MovesList, BerriesList, NaturesList, AbilitiesList
-var actualScreen = ""; //PokemonDetail MovesDetail, BerriesDetail, NaturesDetail, AbilitiesDetail
+var actualScreen = "MainList"; //PokemonList MovesList, BerriesList, NaturesList, AbilitiesList || PokemonDetail MovesDetail, BerriesDetail, NaturesDetail, AbilitiesDetail
+
 const mainList = ["Pokemon", "Move", "Ability", "Nature", "Berry"];
 const oakMessage = "Oak's words echoed... There's a time and place for everything, but not now.";
 
@@ -36,7 +36,6 @@ const fetchLista = async (type) => {
             console.log(list);
         }
     }
-
 }
 
 const renderList = async (type, list) => {
@@ -93,17 +92,12 @@ const renderList = async (type, list) => {
 };
   
 
-
-//poner aqui el elemento para que busque los elementos que pide(bayas, objetos...)
-//hacer condicionales
 const fetchElement = async (type ,element) => {
     const APIResponse = await fetch(`https://pokeapi.co/api/v2/${type}/${element}`);
     if(APIResponse.status == 200){
         const data = await APIResponse.json();
         return data;
-    }
-    
-    
+    }   
 }
 
 const renderPokemon = async (type, id) => {
@@ -131,6 +125,8 @@ const renderPokemon = async (type, id) => {
         pokemonImage.src = 'files/img_pika_pokedex/missigno.png';
         input.value = '';
     }
+
+    
 }
 
 
@@ -164,21 +160,29 @@ buttonDown.addEventListener('click' , () =>{
 buttonA.addEventListener('click' , () =>{
     const elementSelected = document.querySelector(".active");
     let idSelected = null;
-    if(actualList == "MainList"){
+    if(actualScreen == "MainList"){
         const spanSelected = elementSelected.querySelector("span");
         const textoSeleccionado = spanSelected.textContent;
-        actualList = textoSeleccionado + "List";
-        console.log(actualList);
-        fetchLista(actualList);
+        actualScreen = textoSeleccionado + "List";
+        fetchLista(actualScreen);
     } else {
         if (elementSelected && elementSelected.id) {
             idSelected = elementSelected.id;
-            console.log(elementSelected.id);
             changeScreen("PokemonDetail");
             renderPokemon("pokemon", elementSelected.id);
         }
     }
     
+})
+
+buttonB.addEventListener('click' , () =>{
+    if (actualScreen != "MainList"){
+        if(actualScreen.includes("List")){
+            changeScreen("MainList");
+        } else {
+            
+        }
+    }
 })
 
 const changeElementSelected = (action) =>{
@@ -192,7 +196,7 @@ const changeElementSelected = (action) =>{
 
 
 const changeElementsListSelected = (action, actualScreen) =>{
-    if(actualList == "MainList"){
+    if(actualScreen == "MainList"){
         if (action == "sumar"){
             if(indexSelected < mainList.length){
                 const elementSelected = document.querySelector(".active");
@@ -239,12 +243,19 @@ const changeElementsListSelected = (action, actualScreen) =>{
 
 const changeScreen = (screen) =>{
     actualScreen = screen;
+    fetchLista(actualScreen);
 }
 
 const getListType = () =>{
-    const subcadenas = actualList.split("List");
+    const subcadenas = actualScreen.split("List");
     const typeList = subcadenas[0];
     return typeList.toLowerCase();
 }
 
-fetchLista(actualList);
+const getScreenType = () =>{
+    const subcadenas = actualScreen.split("Detail");
+    const typeList = subcadenas[0];
+    return typeList.toLowerCase();
+}
+
+fetchLista(actualScreen);
