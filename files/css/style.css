@@ -24,8 +24,8 @@ main{
 
 .vertical__menu{
     position: absolute;
-    width: fit-content;
-    height: 150px;
+    width: 31%;
+    height: 23%;
     overflow-y: auto;
     top: 33%;
     left: 60%;
