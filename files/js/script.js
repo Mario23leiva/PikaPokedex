@@ -1,7 +1,18 @@
 const pokemonName = document.querySelector('.pokemon__name');
 const pokemonNumber = document.querySelector('.pokemon__number');
 const pokemonImage = document.querySelector('.pokemon__image');
+
+
 const pokeAPIList = document.querySelector('.pokeAPI__list');
+
+const mainList = ["Main", "Pokemon", "Move", "Ability", "Nature", "Berry"];
+const lists = {
+    PokemonList: 0,
+    AbilityList: 0,
+    MoveList: 0,
+    NatureList: 0,
+};
+
 
 const form = document.querySelector('.form');
 const input = document.querySelector('.input__search');
@@ -15,33 +26,34 @@ const buttonB = document.querySelector('.btn__b');
 
 var pokemonSelected = '';
 var indexSelected = 1;
-var newIndexSelected = 1;
-var list = [];
 
 var actualScreen = "MainList"; //PokemonList MovesList, BerriesList, NaturesList, AbilitiesList || PokemonDetail MovesDetail, BerriesDetail, NaturesDetail, AbilitiesDetail
 
-const mainList = ["Pokemon", "Move", "Ability", "Nature", "Berry"];
+
 const oakMessage = "Oak's words echoed... There's a time and place for everything, but not now.";
 
   
 
-const fetchLista = async (type) => {
-    if(type == "MainList"){
-        renderList("main");
-    } else {
-        const APIResponse = await fetch(`https://pokeapi.co/api/v2/${getListType()}?limit=898&offset=0`);
-        if(APIResponse.status == 200){
-            list = await APIResponse.json();
-            renderList(getListType(), list);
-            console.log(list);
+const loadLists = async () => {
+    for(let i = 0; i < mainList.length; i++){
+        if(mainList[i] != "Main"){
+            const APIResponse = await fetch(`https://pokeapi.co/api/v2/${mainList[i].toLowerCase()}?limit=898&offset=0`);
+            if(APIResponse.status == 200){
+                const list = await APIResponse.json();
+                renderList(mainList[i], list);
+                // Asigna la longitud de la lista a su correspondiente propiedad en el objeto
+                lists[`${mainList[i]+'List'}`] = list.results.length;
+            }
+        } else {
+            renderList(mainList[i]);
         }
     }
 }
 
 const renderList = async (type, list) => {
     var index = 1;
-    pokeAPIList.innerHTML = '';
-    if(type != "main"){
+    const listToLoad = document.getElementById(type + "List");
+    if(type != "Main"){
         for (let i = 0; i < list.results.length; i++) {
             const element = list.results[i];
             const obj = await fetchElement(type, element.name);
@@ -67,7 +79,7 @@ const renderList = async (type, list) => {
                 <span>${element.name}</span>
                 `;
             
-                pokeAPIList.appendChild(listItem);
+                listToLoad.appendChild(listItem);
                 index++;
         }
       
@@ -77,23 +89,25 @@ const renderList = async (type, list) => {
         }
     } else{
         for(let i = 0; i < mainList.length; i++) {
-            const listItem = document.createElement('li');
-            if ((i+1) === indexSelected) {
-                listItem.className = 'active';
-            } else {
-                listItem.className = '#' + index;
-            }
-            listItem.id = index;
-            listItem.innerHTML = `- <span>${mainList[i]}</span>`;
-            pokeAPIList.appendChild(listItem);
-            index++;
+            if(mainList[i] != "Main"){
+                const listItem = document.createElement('li');
+                if ((i+1) === indexSelected) {
+                    listItem.className = 'active';
+                } else {
+                    listItem.className = '#' + index;
+                }
+                listItem.id = index;
+                listItem.innerHTML = `- <span>${mainList[i]}</span>`;
+                listToLoad.appendChild(listItem);
+                index++;
+                }
         }
     }
 };
   
 
 const fetchElement = async (type ,element) => {
-    const APIResponse = await fetch(`https://pokeapi.co/api/v2/${type}/${element}`);
+    const APIResponse = await fetch(`https://pokeapi.co/api/v2/${type.toLowerCase()}/${element.toLowerCase()}`);
     if(APIResponse.status == 200){
         const data = await APIResponse.json();
         return data;
@@ -164,12 +178,13 @@ buttonA.addEventListener('click' , () =>{
         const spanSelected = elementSelected.querySelector("span");
         const textoSeleccionado = spanSelected.textContent;
         actualScreen = textoSeleccionado + "List";
-        fetchLista(actualScreen);
+        changeScreen(actualScreen);
     } else {
-        if (elementSelected && elementSelected.id) {
+        if (actualScreen.includes("List")){
+            var newScreen = actualScreen.replace("List", "Detail");
             idSelected = elementSelected.id;
-            changeScreen("PokemonDetail");
-            renderPokemon("pokemon", elementSelected.id);
+            changeScreen(newScreen);
+            
         }
     }
     
@@ -180,7 +195,8 @@ buttonB.addEventListener('click' , () =>{
         if(actualScreen.includes("List")){
             changeScreen("MainList");
         } else {
-            
+            var newScreen = actualScreen.replace("Detail", "List");
+            changeScreen(newScreen);
         }
     }
 })
@@ -198,7 +214,7 @@ const changeElementSelected = (action) =>{
 const changeElementsListSelected = (action, actualScreen) =>{
     if(actualScreen == "MainList"){
         if (action == "sumar"){
-            if(indexSelected < mainList.length){
+            if(indexSelected < mainList.length-1){
                 const elementSelected = document.querySelector(".active");
                 elementSelected.classList.replace("active", "#" + indexSelected);
                 indexSelected++;
@@ -218,7 +234,7 @@ const changeElementsListSelected = (action, actualScreen) =>{
         }
     } else {
         if (action == "sumar"){
-            if(indexSelected != list.length){
+            if(indexSelected != lists[actualScreen]){
                 const elementSelected = document.querySelector(".active");
                 elementSelected.classList.replace("active", "#" + indexSelected);
                 indexSelected++;
@@ -239,11 +255,26 @@ const changeElementsListSelected = (action, actualScreen) =>{
     }
 }
 
+const showScreen = () =>{
+    // Ocultar todos los elementos
+    const menus = document.querySelectorAll('.vertical__menu');
+    menus.forEach(menu => menu.classList.remove('show'));
 
+    // Mostrar el div padre del elemento con el ID proporcionado
+    const selectedMenu = document.getElementById(actualScreen);
+    if (selectedMenu) {
+        const parentDiv = selectedMenu.closest('.vertical__menu');
+        if (parentDiv) {
+            parentDiv.classList.add('show');
+        }
+    }
+    indexSelected = 1;
+    //hay que hacer fetch del elemento
+}
 
 const changeScreen = (screen) =>{
     actualScreen = screen;
-    fetchLista(actualScreen);
+    showScreen(actualScreen);
 }
 
 const getListType = () =>{
@@ -258,4 +289,4 @@ const getScreenType = () =>{
     return typeList.toLowerCase();
 }
 
-fetchLista(actualScreen);
+loadLists();

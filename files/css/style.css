@@ -36,8 +36,14 @@ main{
 
 
 .pokeAPI__list{
+    position: relative;
     text-align: left;
     color: #e3e3e3;
+    z-index: 0;
+}
+
+.show{
+    z-index: 1;
 }
 
 li{
