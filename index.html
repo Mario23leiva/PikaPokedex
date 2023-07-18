@@ -6,17 +6,17 @@
 
     <link rel='stylesheet' href='files/css/style.css'>
     <link rel="shortcut icon" type="image/png" href="files/img_pika_pokedex/pokeball-favicon.png">
-    <script defer src="files/js/script.js"></script>
+    <script defer src="files/js/scripts.js"></script>
 
     <title>PikaPokedex</title>
 </head>
 <body>
     <main>
-        <img src="#" alt="pokemon" class="pokemon__image">
+        <img src="#" alt="element" class="element__image">
 
-        <h1 class="pokemon__data">
-            <span class="pokemon__number"></span> -
-            <span class="pokemon__name"></span>
+        <h1 class="element__data">
+            <span class="element__number"></span> -
+            <span class="element__name"></span>
         </h1>
 
         <form class="form">
@@ -43,34 +43,34 @@
 
         <div class="vertical__menu show">
             <ul class="pokeAPI__list" id="MainList">
-                <li></li>
+                <li class="active" id="Pokemon">Pokemons</li>
+                <li id="Move">Moves</li>
+                <li id="Ability">Abilities</li>
+                <li id="Nature">Natures</li>
+                <li id="Berry">Berries</li>
             </ul>
         </div>
+
         <div class="vertical__menu">
-            <ul class="pokeAPI__list" id="PokemonList">
-                <li></li>
-            </ul>
+            <ul class="pokeAPI__list" id="PokemonList"></ul>
         </div>
+
         <div class="vertical__menu">
-            <ul class="pokeAPI__list" id="AbilityList">
-                <li></li>
-            </ul>
+            <ul class="pokeAPI__list" id="MoveList"></ul>
         </div>
+
         <div class="vertical__menu">
-            <ul class="pokeAPI__list" id="MoveList">
-                <li></li>
-            </ul>
+            <ul class="pokeAPI__list" id="AbilityList"></ul>
         </div>
+
         <div class="vertical__menu">
-            <ul class="pokeAPI__list" id="NatureList">
-                <li></li>
-            </ul>
+            <ul class="pokeAPI__list" id="NatureList"></ul>
         </div>
+
         <div class="vertical__menu">
-            <ul class="pokeAPI__list" id="BerryList">
-                <li></li>
-            </ul>
+            <ul class="pokeAPI__list" id="BerryList"></ul>
         </div>
+        
     </main>
 
 </body>

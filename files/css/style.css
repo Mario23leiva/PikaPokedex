@@ -50,6 +50,7 @@ li{
     list-style: none;
     font-weight: 500;
     font-size: clamp(8px, 2vw, 1rem);
+    padding: 2% 0%;
 }
 
 li img{
@@ -68,7 +69,7 @@ li.active{
     max-width: 825px;
 }
 
-.pokemon__image{
+.element__image{
     position: absolute;
     bottom: 55%;
     left: 19%;
@@ -76,7 +77,7 @@ li.active{
     height: 16%;
 }
 
-.pokemon__data{
+.element__data{
     position: absolute;
     font-weight: 600;
     color: #aaa;
@@ -85,7 +86,7 @@ li.active{
     font-size: clamp(1px, 3vw, 25px);
 }
 
-.pokemon__name{
+.element__name{
     color: #3a444d;
     text-transform: capitalize;
 }

@@ -32,17 +32,17 @@ var actualScreen = "MainList"; //PokemonList MovesList, BerriesList, NaturesList
 
 const oakMessage = "Oak's words echoed... There's a time and place for everything, but not now.";
 
-  
+
 
 const loadLists = async () => {
-    for(let i = 0; i < mainList.length; i++){
-        if(mainList[i] != "Main"){
-            const APIResponse = await fetch(`https://pokeapi.co/api/v2/${mainList[i].toLowerCase()}?limit=898&offset=0`);
-            if(APIResponse.status == 200){
+    for (let i = 0; i < mainList.length; i++) {
+        if (mainList[i] != "Main") {
+            const APIResponse = await fetch(`https://pokeapi.co/api/v2/${mainList[i].toLowerCase()}?limit=10&offset=0`);
+            if (APIResponse.status == 200) {
                 const list = await APIResponse.json();
                 renderList(mainList[i], list);
                 // Asigna la longitud de la lista a su correspondiente propiedad en el objeto
-                lists[`${mainList[i]+'List'}`] = list.results.length;
+                lists[`${mainList[i] + 'List'}`] = list.results.length;
             }
         } else {
             renderList(mainList[i]);
@@ -53,45 +53,45 @@ const loadLists = async () => {
 const renderList = async (type, list) => {
     var index = 1;
     const listToLoad = document.getElementById(type + "List");
-    if(type != "Main"){
+    if (type != "Main") {
         for (let i = 0; i < list.results.length; i++) {
             const element = list.results[i];
             const obj = await fetchElement(type, element.name);
             var pokeOrder = obj.id.toString().length;
-            if(pokeOrder == 1){
+            if (pokeOrder == 1) {
                 pokeOrder = '00' + obj.id;
-            } else if(pokeOrder == 2){
+            } else if (pokeOrder == 2) {
                 pokeOrder = '0' + obj.id;
-            } else{
+            } else {
                 pokeOrder = obj.id;
             }
             const listItem = document.createElement('li');
-        
+
             if (index === indexSelected) {
                 listItem.className = 'active';
             } else {
                 listItem.className = '#' + index;
             }
-            
+
             listItem.id = index;
             listItem.innerHTML = `
                 <span>${pokeOrder}</span> - 
                 <span>${element.name}</span>
                 `;
-            
-                listToLoad.appendChild(listItem);
-                index++;
+
+            listToLoad.appendChild(listItem);
+            index++;
         }
-      
+
         const element001 = document.getElementById("1");
         if (element001) {
             element001.className = "active";
         }
-    } else{
-        for(let i = 0; i < mainList.length; i++) {
-            if(mainList[i] != "Main"){
+    } else {
+        for (let i = 0; i < mainList.length; i++) {
+            if (mainList[i] != "Main") {
                 const listItem = document.createElement('li');
-                if ((i+1) === indexSelected) {
+                if ((i + 1) === indexSelected) {
                     listItem.className = 'active';
                 } else {
                     listItem.className = '#' + index;
@@ -100,99 +100,99 @@ const renderList = async (type, list) => {
                 listItem.innerHTML = `- <span>${mainList[i]}</span>`;
                 listToLoad.appendChild(listItem);
                 index++;
-                }
+            }
         }
     }
 };
-  
 
-const fetchElement = async (type ,element) => {
+
+const fetchElement = async (type, element) => {
     const APIResponse = await fetch(`https://pokeapi.co/api/v2/${type.toLowerCase()}/${element.toLowerCase()}`);
-    if(APIResponse.status == 200){
+    if (APIResponse.status == 200) {
         const data = await APIResponse.json();
         return data;
-    }   
+    }
 }
 
 const renderPokemon = async (type, id) => {
 
     pokemonName.innerHTML = 'Loading...';
-    
+
     data = await fetchElement(type, id);
-    
-    if(data){
+
+    if (data) {
         pokemonName.innerHTML = data.name;
         pokemonNumber.innerHTML = data.id;
-    
+
         pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default'];
         let pokeSripte = pokemonImage.src;
         if (pokemonImage.src === 'http://127.0.0.1:5500/null' || pokemonImage.src === 'https://mario23leiva.github.io/PikaPokedex/null') {
             pokemonImage.src = data['sprites']['versions']['generation-viii']['icons']['front_default'];
         }
-          
+
         input.value = '';
         pokemonSelected = data.id;
     }
-    else{
+    else {
         pokemonName.innerHTML = 'MissingNo';
         pokemonNumber.innerHTML = '¿?';
         pokemonImage.src = 'files/img_pika_pokedex/missigno.png';
         input.value = '';
     }
 
-    
+
 }
 
 
-form.addEventListener('submit' , (event) =>{
+form.addEventListener('submit', (event) => {
     event.preventDefault();
     renderPokemon(input.value.toLowerCase());
 })
 
-buttonNext.addEventListener('click' , () =>{
-    if(actualScreen == "PokemonDetail"){
+buttonNext.addEventListener('click', () => {
+    if (actualScreen == "PokemonDetail") {
         var numberPokemonSelected = parseInt(pokemonSelected);
         renderPokemon((numberPokemonSelected + 1));
     }
 })
 
-buttonPrev.addEventListener('click' , () =>{
-    if(actualScreen == "PokemonDetail"){
+buttonPrev.addEventListener('click', () => {
+    if (actualScreen == "PokemonDetail") {
         var numberPokemonSelected = parseInt(pokemonSelected);
         renderPokemon((numberPokemonSelected - 1));
     }
 })
 
-buttonUp.addEventListener('click' , () =>{
+buttonUp.addEventListener('click', () => {
     changeElementSelected("restar");
 })
 
-buttonDown.addEventListener('click' , () =>{
+buttonDown.addEventListener('click', () => {
     changeElementSelected("sumar");
 })
 
-buttonA.addEventListener('click' , () =>{
+buttonA.addEventListener('click', () => {
     const elementSelected = document.querySelector(".active");
     let idSelected = null;
-    if(actualScreen == "MainList"){
+    if (actualScreen == "MainList") {
         const spanSelected = elementSelected.querySelector("span");
         const textoSeleccionado = spanSelected.textContent;
         actualScreen = textoSeleccionado + "List";
         changeScreen(actualScreen);
     } else {
-        if (actualScreen.includes("List")){
+        if (actualScreen.includes("List")) {
             var newScreen = actualScreen.replace("List", "Detail");
             idSelected = elementSelected.id;
             changeScreen(newScreen);
-            
+
         }
     }
-    
+
 })
 
-buttonB.addEventListener('click' , () =>{
-    if (actualScreen != "MainList"){
-        if(actualScreen.includes("List")){
+buttonB.addEventListener('click', () => {
+    if (actualScreen != "MainList") {
+        if (actualScreen.includes("List")) {
             changeScreen("MainList");
         } else {
             var newScreen = actualScreen.replace("Detail", "List");
@@ -201,20 +201,20 @@ buttonB.addEventListener('click' , () =>{
     }
 })
 
-const changeElementSelected = (action) =>{
-    if(actualScreen == "MainList"){
+const changeElementSelected = (action) => {
+    if (actualScreen == "MainList") {
         changeElementsListSelected(action, actualScreen);
-    } else{
+    } else {
         changeElementsListSelected(action);
     }
 }
 
 
 
-const changeElementsListSelected = (action, actualScreen) =>{
-    if(actualScreen == "MainList"){
-        if (action == "sumar"){
-            if(indexSelected < mainList.length-1){
+const changeElementsListSelected = (action, actualScreen) => {
+    if (actualScreen == "MainList") {
+        if (action == "sumar") {
+            if (indexSelected < mainList.length - 1) {
                 const elementSelected = document.querySelector(".active");
                 elementSelected.classList.replace("active", "#" + indexSelected);
                 indexSelected++;
@@ -222,8 +222,8 @@ const changeElementsListSelected = (action, actualScreen) =>{
                 newElementSelected.classList.replace("#" + indexSelected, "active");
                 newElementSelected.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
-        } else if (action == "restar"){
-            if(indexSelected != 1){
+        } else if (action == "restar") {
+            if (indexSelected != 1) {
                 const elementSelected = document.querySelector(".active");
                 elementSelected.classList.replace("active", "#" + indexSelected);
                 indexSelected--;
@@ -233,8 +233,8 @@ const changeElementsListSelected = (action, actualScreen) =>{
             }
         }
     } else {
-        if (action == "sumar"){
-            if(indexSelected != lists[actualScreen]){
+        if (action == "sumar") {
+            if (indexSelected != lists[actualScreen]) {
                 const elementSelected = document.querySelector(".active");
                 elementSelected.classList.replace("active", "#" + indexSelected);
                 indexSelected++;
@@ -242,8 +242,8 @@ const changeElementsListSelected = (action, actualScreen) =>{
                 newElementSelected.classList.replace("#" + indexSelected, "active");
                 newElementSelected.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
-        } else if (action == "restar"){
-            if(indexSelected != 1){
+        } else if (action == "restar") {
+            if (indexSelected != 1) {
                 const elementSelected = document.querySelector(".active");
                 elementSelected.classList.replace("active", "#" + indexSelected);
                 indexSelected--;
@@ -255,7 +255,7 @@ const changeElementsListSelected = (action, actualScreen) =>{
     }
 }
 
-const showScreen = () =>{
+const showScreen = () => {
     // Ocultar todos los elementos
     const menus = document.querySelectorAll('.vertical__menu');
     menus.forEach(menu => menu.classList.remove('show'));
@@ -272,18 +272,18 @@ const showScreen = () =>{
     //hay que hacer fetch del elemento
 }
 
-const changeScreen = (screen) =>{
+const changeScreen = (screen) => {
     actualScreen = screen;
     showScreen(actualScreen);
 }
 
-const getListType = () =>{
+const getListType = () => {
     const subcadenas = actualScreen.split("List");
     const typeList = subcadenas[0];
     return typeList.toLowerCase();
 }
 
-const getScreenType = () =>{
+const getScreenType = () => {
     const subcadenas = actualScreen.split("Detail");
     const typeList = subcadenas[0];
     return typeList.toLowerCase();
