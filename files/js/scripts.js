@@ -35,6 +35,13 @@ function getListItems() {
     return [];
 }
 
+// Función para limpiar la lista actual
+function clearList() {
+    const listToClear = activeList;
+    const listItems = listToClear.querySelectorAll('li');
+    listItems.forEach(item => listToClear.removeChild(item));
+}
+
 // Función para cambiar la lista activafunction changeScreen(selectedID) {
 function changeScreen(selectedID) {
     const currentActiveDiv = document.querySelector('.vertical__menu.show');
@@ -70,6 +77,7 @@ function changeScreen(selectedID) {
         }
 
         activeList = selectedList;
+        actualScreen = selectedID;
     }
 }
 
@@ -120,19 +128,21 @@ buttonA.addEventListener('click', () => {
 
     const activeItem = document.querySelector('.pokeAPI__list .active');
 
-    if (activeItem) {
-        changeScreen(activeItem.id); // Imprimir contenido del elemento
+    if (activeItem && actualScreen == "Main")
+        changeScreen(activeItem.id);
 
-    } else {
+    else
         console.log('No se encontró ningún elemento con la clase "active".');
-    }
 
 });
 
 //Go to the last list screen
 buttonB.addEventListener('click', () => {
-    changeScreen('Main');
+
+    if (actualScreen != 'Main') clearList(); // Eliminar todos los elementos de la lista actual
+    changeScreen('Main'); // Cambiar a la pantalla principal
 });
+
 
 // Función para agregar la clase 'active' al elemento clicado
 function setActiveOnClick(event) {
@@ -161,7 +171,12 @@ function handleDoubleClick(event) {
         const clickedElement = event.target;
         // Verificar que el elemento clicado es un <li> dentro de la lista
         if (clickedElement.tagName === 'LI' && clickedElement.parentNode.classList.contains('pokeAPI__list')) {
-            changeScreen(clickedElement.id); // Imprimir contenido del elemento
+            if(actualScreen == 'Main'){
+                changeScreen(clickedElement.id); // Imprimir contenido del elemento
+            } else{
+                renderElement();
+            }
+
         }
     }
 }
@@ -216,6 +231,35 @@ const renderList = async (type, list) => {
         }
     }
 };
+
+const renderElement = async (type, id) => {
+
+    pokemonName.innerHTML = 'Loading...';
+
+    data = await fetchElement(type, id);
+
+    if (data) {
+        pokemonName.innerHTML = data.name;
+        pokemonNumber.innerHTML = data.id;
+
+        pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default'];
+        let pokeSripte = pokemonImage.src;
+        if (pokemonImage.src === 'http://127.0.0.1:5500/null' || pokemonImage.src === 'https://mario23leiva.github.io/PikaPokedex/null') {
+            pokemonImage.src = data['sprites']['versions']['generation-viii']['icons']['front_default'];
+        }
+
+        input.value = '';
+        pokemonSelected = data.id;
+    }
+    else {
+        pokemonName.innerHTML = 'MissingNo';
+        pokemonNumber.innerHTML = '¿?';
+        pokemonImage.src = 'files/img_pika_pokedex/missigno.png';
+        input.value = '';
+    }
+
+
+}
 
 const fetchElement = async (type, element) => {
     const APIResponse = await fetch(`https://pokeapi.co/api/v2/${type.toLowerCase()}/${element.toLowerCase()}`);
