@@ -35,6 +35,15 @@ function getListItems() {
     return [];
 }
 
+function getIdActiveItem() {
+    const activeItem = activeList.querySelector('.active'); // Obtener el elemento activo
+    const primerSpan = activeItem.querySelector('span:first-child'); // Obtener el primer span
+    const textoConCeros = primerSpan.textContent; // Obtener el texto del primer span
+    const textoSinCeros = parseInt(textoConCeros, 10); // Eliminar los ceros utilizando parseInt
+    return textoSinCeros; // Devolver el texto sin ceros
+}
+
+
 // Función para limpiar la lista actual
 function clearList() {
     const listToClear = activeList;
@@ -51,9 +60,10 @@ function changeScreen(selectedID) {
         loadLists(selectedID);
     }
 
-    if (currentActiveDiv && selectedList) {
+    if (currentActiveDiv) {
         // Quitar la clase 'show' al div actual
         currentActiveDiv.classList.remove('show');
+        currentActiveDiv.classList.add('hide');
 
         // Quitar la clase 'active' a la lista actual
         const currentActiveList = currentActiveDiv.querySelector('.pokeAPI__list');
@@ -61,12 +71,14 @@ function changeScreen(selectedID) {
         if (activeItem) {
             activeItem.classList.remove('active');
         }
-
+    }
+    if(selectedList){
         // Obtener el nuevo div que contiene la lista seleccionada
         const selectedDiv = selectedList.parentNode;
 
         // Añadir la clase 'show' al nuevo div
         selectedDiv.classList.add('show');
+        selectedDiv.classList.remove('hide');
 
         // Obtener el primer elemento de la nueva lista
         const firstListItem = selectedList.querySelector('li');
@@ -81,6 +93,16 @@ function changeScreen(selectedID) {
     }
 }
 
+function hideActiveList() {
+    const activeItem = document.querySelector('.pokeAPI__list li.active'); // Buscar el elemento activo
+    if (activeItem) {
+        const activeList = activeItem.closest('.vertical__menu'); // Obtener el div contenedor del elemento activo
+        if (activeList) {
+            activeList.classList.remove('show'); // Quitar la clase "show" del div
+            activeList.classList.add('hide'); // Agregar la clase "hide" al div
+        }
+    }
+}
 
 
 
@@ -140,6 +162,7 @@ buttonA.addEventListener('click', () => {
 buttonB.addEventListener('click', () => {
 
     if (actualScreen != 'Main') clearList(); // Eliminar todos los elementos de la lista actual
+    
     changeScreen('Main'); // Cambiar a la pantalla principal
 });
 
@@ -171,10 +194,10 @@ function handleDoubleClick(event) {
         const clickedElement = event.target;
         // Verificar que el elemento clicado es un <li> dentro de la lista
         if (clickedElement.tagName === 'LI' && clickedElement.parentNode.classList.contains('pokeAPI__list')) {
-            if(actualScreen == 'Main'){
+            if (actualScreen == 'Main') {
                 changeScreen(clickedElement.id); // Imprimir contenido del elemento
-            } else{
-                renderElement();
+            } else {
+                renderElement(actualScreen.toLowerCase(), getIdActiveItem(clickedElement));
             }
 
         }
@@ -258,11 +281,13 @@ const renderElement = async (type, id) => {
         input.value = '';
     }
 
+    actualScreen = type;
+    hideActiveList();
 
 }
 
 const fetchElement = async (type, element) => {
-    const APIResponse = await fetch(`https://pokeapi.co/api/v2/${type.toLowerCase()}/${element.toLowerCase()}`);
+    const APIResponse = await fetch(`https://pokeapi.co/api/v2/${type.toLowerCase()}/${element.toString().toLowerCase()}`);
     if (APIResponse.status == 200) {
         const data = await APIResponse.json();
         return data;

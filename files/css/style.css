@@ -46,6 +46,10 @@ main{
     z-index: 1;
 }
 
+.hide{
+    z-index: -1;
+}
+
 li{
     list-style: none;
     font-weight: 500;
