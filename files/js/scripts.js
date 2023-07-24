@@ -1,5 +1,5 @@
-const pokemonName = document.querySelector('.element__name');
-const pokemonNumber = document.querySelector('.element__number');
+const objectName = document.querySelector('.element__name');
+const objectNumber = document.querySelector('.element__number');
 const pokemonImage = document.querySelector('.element__image');
 
 
@@ -163,6 +163,9 @@ buttonB.addEventListener('click', () => {
 
     if (actualScreen != 'Main') clearList(); // Eliminar todos los elementos de la lista actual
     
+    objectName.innerHTML = '';
+    objectNumber.innerHTML = '';
+
     changeScreen('Main'); // Cambiar a la pantalla principal
 });
 
@@ -257,13 +260,13 @@ const renderList = async (type, list) => {
 
 const renderElement = async (type, id) => {
 
-    pokemonName.innerHTML = 'Loading...';
+    objectName.innerHTML = 'Loading...';
 
     data = await fetchElement(type, id);
 
     if (data) {
-        pokemonName.innerHTML = data.name;
-        pokemonNumber.innerHTML = data.id;
+        objectName.innerHTML = data.name;
+        objectNumber.innerHTML = data.id;
 
         pokemonImage.src = data['sprites']['versions']['generation-v']['black-white']['animated']['front_default'];
         let pokeSripte = pokemonImage.src;
@@ -275,8 +278,8 @@ const renderElement = async (type, id) => {
         pokemonSelected = data.id;
     }
     else {
-        pokemonName.innerHTML = 'MissingNo';
-        pokemonNumber.innerHTML = '¿?';
+        objectName.innerHTML = 'MissingNo';
+        objectNumber.innerHTML = '¿?';
         pokemonImage.src = 'files/img_pika_pokedex/missigno.png';
         input.value = '';
     }
